@@ -1,10 +1,10 @@
 # gerrit
 #
-# VERSION               0.0.1
+# VERSION               0.0.2
 
 FROM  ubuntu:trusty
 
-MAINTAINER Jason W. Edgecombe <jason@rampaginggek.com>
+MAINTAINER Larry Cai <larry.caiyu@gmail.com>
 
 ENV GERRIT_HOME /home/gerrit
 ENV GERRIT_USER gerrit
@@ -18,17 +18,18 @@ RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" > /etc/apt/
 RUN apt-get update
 RUN apt-get upgrade
 
-RUN useradd -m $GERRIT_USER
+RUN useradd -m ${GERRIT_USER}
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y openjdk-6-jre-headless sudo git-core supervisor vim-tiny
 RUN mkdir -p /var/log/supervisor
 
-ADD http://gerrit-releases.storage.googleapis.com/gerrit-2.8.war /tmp/gerrit.war
+ADD http://gerrit-releases.storage.googleapis.com/gerrit-2.8.5.war /tmp/gerrit.war
+#ADD gerrit-2.8.war /tmp/gerrit.war
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 RUN mkdir -p $GERRIT_HOME/gerrit
 RUN mv /tmp/gerrit.war $GERRIT_WAR
-RUN chown -R ${GERRIT_USER}.${GERRIT_USER} $GERRIT_HOME
-RUN rm -f /etc/apt/apt.conf.d/01proxy
+RUN chown -R ${GERRIT_USER}:${GERRIT_USER} $GERRIT_HOME
+#RUN rm -f /etc/apt/apt.conf.d/01proxy
 
 USER gerrit
 RUN java -jar $GERRIT_WAR init --batch -d $GERRIT_HOME/gerrit
