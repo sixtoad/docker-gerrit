@@ -2,7 +2,7 @@
 #
 # VERSION 2.9.1            
 
-FROM  ubuntu:trusty
+FROM  phusion/baseimage
 
 MAINTAINER Dale Larson <dlarson42@gmail.com>
 
@@ -21,7 +21,12 @@ RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 
 RUN useradd -m ${GERRIT_USER}
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends openjdk-7-jre-headless sudo git-core supervisor vim-tiny && apt-get clean 
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+       openjdk-7-jre-headless sudo git-core supervisor vim-tiny \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 RUN mkdir -p /var/log/supervisor
 
 ADD http://gerrit-releases.storage.googleapis.com/gerrit-2.9.1.war /tmp/gerrit.war
@@ -34,9 +39,10 @@ RUN chown -R ${GERRIT_USER}:${GERRIT_USER} $GERRIT_HOME
 USER gerrit
 RUN java -jar $GERRIT_WAR init --batch -d $GERRIT_HOME/gerrit
 
-# clobber the gerrit config. set the URL to localhost:8080
+# Replace the gerrit config and set the URL to 0.0.0.0:8080
 ADD gerrit.config $GERRIT_HOME/gerrit/etc/gerrit.config
 
 USER root
 EXPOSE 8080 29418
 CMD ["/usr/sbin/service","supervisor","start"]
+
