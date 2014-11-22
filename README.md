@@ -7,6 +7,6 @@ for intial testing purposes.
 
 Built on top of Ubuntu Trusty (14.04) and gerrit 2.9.1
 
-    $ docker pull jcibe/gerrit
-    $ docker run --name gerrit -p 0.0.0.0:8080:8080 -p 0.0.0.0:29418:29418 -d jcibe/gerrit
+    $ docker pull jcibe/docker-gerrit
+    $ docker run --name gerrit -p 0.0.0.0:8080:8080 -p 0.0.0.0:29418:29418 -d jcibe/docker-gerrit
 
