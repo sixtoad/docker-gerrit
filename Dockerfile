@@ -17,12 +17,12 @@ RUN echo "deb http://archive.ubuntu.com/ubuntu trusty-security main universe" >>
 # comment out the following line if you don't have a local deb proxy
 #RUN IPADDR=$( ip route | grep default | awk '{print $3}' ) ; echo "Acquire::http { Proxy \"http://$IPADDR:3142\"; };" | tee -a /etc/apt/apt.conf.d/01proxy
 
-RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
+RUN apt-get -qq update
+#RUN DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
 
 RUN useradd -m ${GERRIT_USER}
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -qq --no-install-recommends \
        openjdk-7-jre-headless sudo git-core supervisor vim-tiny \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
