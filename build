@@ -1,3 +1,4 @@
 #!/bin/sh
 docker rmi jcibe/gerrit
 docker build --rm -t jcibe/gerrit .
+
